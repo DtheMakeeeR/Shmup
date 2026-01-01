@@ -1,0 +1,52 @@
+using UnityEngine;
+using UnityEngine.Splines;
+using Utilities;
+namespace Shmup
+{
+    public partial class EnemyBuilder
+    {
+        GameObject enemyPrefab;
+        GameObject weaponPrefab;
+        float speed;
+        SplineContainer spline;
+
+        public EnemyBuilder SetBasePrefab(GameObject prefab)
+        {
+            enemyPrefab = prefab;
+            return this;
+        }
+        public EnemyBuilder SetSpline (SplineContainer spline)
+        {
+            this.spline = spline;
+            return this;
+        }
+        public EnemyBuilder SetWeaponPrefab(GameObject prefab)
+        {
+            weaponPrefab = prefab;
+            return this;
+        }
+        public EnemyBuilder SetSpeed(float speed)
+        {
+            this.speed = speed;
+            return this;
+        }
+
+        public GameObject Build()
+        {
+            GameObject instance = GameObject.Instantiate(enemyPrefab);
+
+            SplineAnimate splineAnimate = instance.GetOrAdd<SplineAnimate>();//extension method
+
+            splineAnimate.Container = spline;
+            splineAnimate.AnimationMethod = SplineAnimate.Method.Speed;
+            splineAnimate.ObjectUpAxis = SplineAnimate.AlignAxis.ZAxis;
+            splineAnimate.ObjectForwardAxis = SplineAnimate.AlignAxis.YAxis;
+            splineAnimate.MaxSpeed = speed;
+
+            instance.transform.position = spline.EvaluatePosition(0f);
+            //splineAnimate.Play();
+            splineAnimate.Restart(true);
+            return instance;
+        }
+    }
+}
