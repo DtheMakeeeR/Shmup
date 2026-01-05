@@ -52,7 +52,7 @@ namespace Shmup
         private void Move()
         {
             targetPosition += new Vector3(input.Move.x, input.Move.y, transform.position.z) * (speed * Time.deltaTime);
-
+            targetPosition.z = 0;
             var minPlayerX = CameraFollow.position.x + minX;
             var maxPlayerX = CameraFollow.position.x + maxX;
             var minPlayerY = CameraFollow.position.y + minY;
